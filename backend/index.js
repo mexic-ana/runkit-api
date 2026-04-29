@@ -12,7 +12,10 @@ const weatherRoutes = require('./routes/weather');
 const app = express();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: [
+    process.env.FRONTEND_URL,
+    'https://mexic-ana.github.io'
+  ],
   credentials: true
 }));
 
