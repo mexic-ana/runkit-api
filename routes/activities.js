@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
       date: formatDate(a.start_date_local),
       start_date: a.start_date,
       start_latlng: a.start_latlng,
-      city: a.location_city || a.timezone?.split('/')[1]?.replace('_', ' ') || 'Unknown'
+      city: a.location_city || null
     }));
 
     res.json({ activities: mapped, page, per_page: perPage });
