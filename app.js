@@ -129,7 +129,11 @@ async function renderActivities() {
   try {
     const response = await fetch(`${API_URL}/activities?page=${activitiesPage}&per_page=10`);
     const data = await response.json();
-    allActivities = [...allActivities, ...data.activities];
+    if (activitiesPage === 1) {
+      allActivities = data.activities;
+    } else {
+      allActivities = [...allActivities, ...data.activities];
+    }
 
     const loggedIds = new Set(logs.map(l => l.activityId));
     let html = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
