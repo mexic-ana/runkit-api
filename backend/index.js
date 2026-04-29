@@ -14,7 +14,8 @@ const app = express();
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL,
-    'https://mexic-ana.github.io'
+    'https://mexic-ana.github.io',
+    'https://runkit.analissamoreno.com'
   ],
   credentials: true
 }));
