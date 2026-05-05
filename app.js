@@ -50,8 +50,6 @@ function loadSavedState() {
   }
   const savedUnit = localStorage.getItem('rk_unit');
   if (savedUnit) unit = savedUnit;
-  const savedLocation = localStorage.getItem('rk_location');
-  if (savedLocation) locationGranted = true;
 }
 
 function toC(f) { return Math.round((f - 32) * 5 / 9); }
@@ -88,24 +86,6 @@ function connectStrava() {
 }
 
 function doLaterStrava() { showScreen('onboard2'); }
-
-function requestLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(() => {
-      locationGranted = true;
-      localStorage.setItem('rk_location', 'true');
-      const btn = document.getElementById('location-allow-btn');
-      if (btn) { btn.classList.add('success'); btn.innerHTML = '✓ Location allowed'; btn.onclick = null; }
-      setTimeout(() => finishOnboard(), 800);
-    }, () => {
-      alert('Location access denied. You can enable it later in Settings.');
-    });
-  }
-}
-
-function doLaterLocation() {
-  document.getElementById('modal-location').style.display = 'flex';
-}
 
 function closeModal() {
   document.getElementById('modal-location').style.display = 'none';
@@ -178,6 +158,7 @@ function loadMore() {
 async function selectActivity(id) {
   document.getElementById('save-btn').textContent = 'Save log';
   editingLogId = null;
+  document.getElementById('delete-btn').style.display = 'none';
 
   selectedActivity = allActivities.find(a => a.id === id);
   if (!selectedActivity) return;
@@ -326,16 +307,22 @@ function editLog(id) {
 
   // Update save button
   document.getElementById('save-btn').textContent = 'Update log';
+  document.getElementById('delete-btn').style.display = 'block';
 
   renderClothing();
   showScreen('log');
 }
 
 function deleteLog(id) {
-  if (!confirm('Delete this log?')) return;
   logs = logs.filter(l => l.id !== id);
   try { localStorage.setItem('rk_logs', JSON.stringify(logs)); } catch(e) {}
   renderHistory();
+}
+
+function confirmDelete() {
+  if (!confirm('Delete this log?')) return;
+  deleteLog(editingLogId);
+  navTo('history');
 }
 
 function getTempRange(f) {
@@ -362,7 +349,7 @@ function renderHistory() {
   }
 
   list.innerHTML = filtered.map(l => `
-    <div class="log-item">
+    <div class="log-item" onclick="editLog(${l.id})">
       <div class="log-header">
         <div>
           <div class="log-temp">${l.tempF ? displayTemp(l.tempF) : '--°'}</div>
@@ -370,10 +357,7 @@ function renderHistory() {
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
           <div class="log-date">${l.date}</div>
-          <div style="display:flex;gap:8px;">
-            <button class="log-action-btn" onclick="editLog(${l.id})">Edit</button>
-            <button class="log-action-btn danger" onclick="deleteLog(${l.id})">Delete</button>
-          </div>
+          <div class="log-edit-hint">Tap to edit ›</div>
         </div>
       </div>
       ${l.worn?.length ? `<div class="log-clothes">${l.worn.map(w => `<span class="clothes-tag">${w}</span>`).join('')}</div>` : ''}
@@ -392,16 +376,6 @@ function renderSettings() {
          <button class="text-btn danger" onclick="disconnectStrava()">Disconnect</button>`
       : `<span class="srow-label">Not connected</span>
          <button class="text-btn orange" onclick="connectStrava()">Connect</button>`}
-  </div>`;
-
-  document.getElementById('location-settings-block').innerHTML = `<div class="srow">
-    <div>
-      <div class="srow-label">Location access</div>
-      <div class="srow-sub">Required for hyperlocal weather at activity time</div>
-    </div>
-    ${locationGranted
-      ? `<span style="font-size:13px;color:#3B6D11;font-weight:500;">Allowed</span>`
-      : `<button class="text-btn orange" onclick="requestLocation()">Allow</button>`}
   </div>`;
 
   ['tops', 'bottoms', 'accessories'].forEach(cat => {

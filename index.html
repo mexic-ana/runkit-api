@@ -25,7 +25,6 @@
     <div id="screen-onboard1" class="content">
       <div class="progress-dots">
         <div class="dot active"></div>
-        <div class="dot"></div>
       </div>
       <div class="onboard-page">
         <div class="onboard-icon-wrap strava">
@@ -42,27 +41,6 @@
           Connect with Strava
         </button>
         <button class="secondary-btn" onclick="doLaterStrava()">Do later</button>
-      </div>
-    </div>
-
-    <!-- ONBOARD 2 -->
-    <div id="screen-onboard2" class="content" style="display:none;">
-      <div class="progress-dots">
-        <div class="dot"></div>
-        <div class="dot active"></div>
-      </div>
-      <div class="onboard-page">
-        <div class="onboard-icon-wrap location">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <circle cx="16" cy="13" r="5" stroke="white" stroke-width="2.5"/>
-            <path d="M16 3v3M16 20v2M29 13h-3M9 13H6" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M16 20c0 0-9 6-9 10h18c0-4-9-10-9-10z" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="onboard-heading">Location access</div>
-        <div class="onboard-body">Run Kit uses your location to pull hyperlocal weather conditions matched to the exact time and place of your activity.</div>
-        <button class="primary-btn dark" id="location-allow-btn" onclick="requestLocation()">Allow location access</button>
-        <button class="secondary-btn" onclick="doLaterLocation()">Do later</button>
       </div>
     </div>
 
@@ -141,7 +119,10 @@
         <div class="card-label">Notes</div>
         <textarea class="notes-textarea" id="notes-input" placeholder="Anything else worth remembering..."></textarea>
       </div>
-      <button class="save-btn" id="save-btn" onclick="saveLog()">Save log</button>
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button class="save-btn" id="save-btn" onclick="saveLog()" style="flex:1;">Save log</button>
+        <button class="delete-btn" id="delete-btn" onclick="confirmDelete()" style="display:none;">Delete</button>
+      </div>
     </div>
 
     <!-- HISTORY -->
@@ -162,8 +143,6 @@
     <div id="screen-settings" class="content" style="display:none;">
       <div class="settings-section-label">Strava</div>
       <div class="settings-block" id="strava-settings-block"></div>
-      <div class="settings-section-label">Location access</div>
-      <div class="settings-block" id="location-settings-block"></div>
       <div class="settings-section-label">Units</div>
       <div class="settings-block">
         <div class="srow">
