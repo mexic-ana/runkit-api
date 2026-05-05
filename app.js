@@ -14,9 +14,9 @@ let editingLogId = null;
 const checked = { tops: new Set(), bottoms: new Set(), accessories: new Set() };
 const hiddenItems = { tops: new Set(), bottoms: new Set(), accessories: new Set() };
 const clothing = {
-  tops: ['Short sleeve', 'Long sleeve', 'Base layer', 'Jacket', 'Vest', 'Hoodie'],
+  tops: ['Sports bra', 'Short sleeve', 'Long sleeve', 'Base layer', 'Jacket', 'Vest', 'Hoodie'],
   bottoms: ['Shorts', 'Tights', 'Capris', 'Wind pants'],
-  accessories: ['Gloves', 'Hat/beanie', 'Buff/gaiter', 'Sunglasses', 'Arm warmers']
+  accessories: ['Gloves', 'Hat', 'Beanie', 'Buff/gaiter', 'Sunglasses', 'Arm warmers']
 };
 
 let logs = [];

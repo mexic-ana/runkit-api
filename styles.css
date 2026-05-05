@@ -124,7 +124,7 @@ body { font-family: var(--font); background: var(--color-background-tertiary); }
 .clothing-label { font-size: 13px; color: var(--color-text-primary); line-height: 1.2; }
 .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 12px 0; }
 .add-item-row { display: flex; gap: 7px; margin-top: 10px; align-items: center; }
-.add-input { flex: 1; font-family: var(--font); font-size: 13px; padding: 8px 10px; border-radius: var(--radius-sm); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); min-width: 0; }
+.add-input { flex: 1; font-family: var(--font); font-size: 16px; padding: 8px 10px; border-radius: var(--radius-sm); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); min-width: 0; }
 .add-input:focus { outline: none; border-color: var(--color-border-primary); }
 .section-select { font-family: var(--font); font-size: 13px; padding: 8px; border-radius: var(--radius-sm); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; flex-shrink: 0; }
 .add-btn { font-family: var(--font); font-size: 13px; padding: 8px 14px; border-radius: var(--radius-sm); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; flex-shrink: 0; }
@@ -198,7 +198,7 @@ body { font-family: var(--font); background: var(--color-background-tertiary); }
 .preset-remove { background: none; border: none; cursor: pointer; color: var(--color-text-tertiary); font-size: 18px; line-height: 1; padding: 0 2px; flex-shrink: 0; width: 28px; text-align: center; }
 .preset-remove:hover { color: #A32D2D; }
 .add-row { display: flex; gap: 8px; padding: 12px 16px; background: var(--color-background-primary); border-top: 0.5px solid var(--color-border-tertiary); }
-.add-row-input { flex: 1; font-family: var(--font); font-size: 14px; padding: 9px 12px; border-radius: var(--radius-sm); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); color: var(--color-text-primary); min-width: 0; }
+.add-row-input { flex: 1; font-family: var(--font); font-size: 16px; padding: 9px 12px; border-radius: var(--radius-sm); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); color: var(--color-text-primary); min-width: 0; }
 .add-row-input:focus { outline: none; border-color: var(--color-border-primary); }
 .add-row-btn { font-family: var(--font); font-size: 14px; padding: 9px 16px; border-radius: var(--radius-sm); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; }
 .add-row-btn:hover { background: var(--color-background-secondary); }
