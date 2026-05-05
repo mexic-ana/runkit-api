@@ -202,3 +202,22 @@ body { font-family: var(--font); background: var(--color-background-tertiary); }
 .add-row-input:focus { outline: none; border-color: var(--color-border-primary); }
 .add-row-btn { font-family: var(--font); font-size: 14px; padding: 9px 16px; border-radius: var(--radius-sm); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; }
 .add-row-btn:hover { background: var(--color-background-secondary); }
+.log-action-btn {
+  font-family: var(--font);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.log-action-btn:hover { background: var(--color-background-secondary); }
+
+.log-action-btn.danger {
+  border-color: #A32D2D;
+  color: #A32D2D;
+}
+
+.log-action-btn.danger:hover { background: rgba(163, 45, 45, 0.08); }

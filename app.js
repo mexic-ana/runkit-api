@@ -9,6 +9,7 @@ let activitiesPage = 1;
 let allActivities = [];
 let currentSubCat = null;
 let authToken = null;
+let editingLogId = null;
 
 const checked = { tops: new Set(), bottoms: new Set(), accessories: new Set() };
 const hiddenItems = { tops: new Set(), bottoms: new Set(), accessories: new Set() };
@@ -175,6 +176,9 @@ function loadMore() {
 }
 
 async function selectActivity(id) {
+  document.getElementById('save-btn').textContent = 'Save log';
+  editingLogId = null;
+
   selectedActivity = allActivities.find(a => a.id === id);
   if (!selectedActivity) return;
 
@@ -251,22 +255,87 @@ function addItem() {
 
 function saveLog() {
   const worn = [...checked.tops, ...checked.bottoms, ...checked.accessories];
-  logs.unshift({
-    id: Date.now(),
-    activityId: selectedActivity.id,
-    activityName: selectedActivity.name,
-    activityMeta: selectedActivity.distance + ' · ' + selectedActivity.duration,
-    tempF: selectedActivity.weather?.temp_f || null,
-    feelsF: selectedActivity.weather?.feels_like_f || null,
-    condition: selectedActivity.weather?.condition || null,
-    worn,
-    workedWell: document.getElementById('worked-well').value.trim(),
-    wouldChange: document.getElementById('would-change').value.trim(),
-    notes: document.getElementById('notes-input').value.trim(),
-    date: selectedActivity.date
-  });
+
+  if (editingLogId) {
+    // Edit existing log
+    const index = logs.findIndex(l => l.id === editingLogId);
+    if (index !== -1) {
+      logs[index] = {
+        ...logs[index],
+        worn,
+        workedWell: document.getElementById('worked-well').value.trim(),
+        wouldChange: document.getElementById('would-change').value.trim(),
+        notes: document.getElementById('notes-input').value.trim(),
+      };
+    }
+    editingLogId = null;
+  } else {
+    // New log
+    logs.unshift({
+      id: Date.now(),
+      activityId: selectedActivity.id,
+      activityName: selectedActivity.name,
+      activityMeta: selectedActivity.distance + ' · ' + selectedActivity.duration,
+      tempF: selectedActivity.weather?.temp_f || null,
+      feelsF: selectedActivity.weather?.feels_like_f || null,
+      condition: selectedActivity.weather?.condition || null,
+      worn,
+      workedWell: document.getElementById('worked-well').value.trim(),
+      wouldChange: document.getElementById('would-change').value.trim(),
+      notes: document.getElementById('notes-input').value.trim(),
+      date: selectedActivity.date
+    });
+  }
+
   try { localStorage.setItem('rk_logs', JSON.stringify(logs)); } catch(e) {}
   navTo('history');
+}
+
+function editLog(id) {
+  const log = logs.find(l => l.id === id);
+  if (!log) return;
+
+  editingLogId = id;
+
+  // Pre-fill clothing
+  checked.tops.clear(); checked.bottoms.clear(); checked.accessories.clear();
+  log.worn?.forEach(item => {
+    if (clothing.tops.includes(item)) checked.tops.add(item);
+    else if (clothing.bottoms.includes(item)) checked.bottoms.add(item);
+    else checked.accessories.add(item);
+  });
+
+  // Pre-fill feedback and notes
+  document.getElementById('worked-well').value = log.workedWell || '';
+  document.getElementById('would-change').value = log.wouldChange || '';
+  document.getElementById('notes-input').value = log.notes || '';
+
+  // Set up the activity card
+  document.getElementById('sel-card').innerHTML = `
+    <div class="sel-icon">🏃‍♀️</div>
+    <div>
+      <div class="sel-name">${log.activityName}</div>
+      <div class="sel-meta">${log.activityMeta || ''} · ${log.date}</div>
+    </div>`;
+
+  // Set up weather display
+  document.getElementById('log-temp').textContent = log.tempF ? displayTemp(log.tempF) : '--°';
+  document.getElementById('log-feels').textContent = log.feelsF ? 'Feels like ' + displayTemp(log.feelsF) : '--';
+  document.getElementById('log-cond').textContent = log.condition || '--';
+  document.getElementById('log-ts').textContent = log.date;
+
+  // Update save button
+  document.getElementById('save-btn').textContent = 'Update log';
+
+  renderClothing();
+  showScreen('log');
+}
+
+function deleteLog(id) {
+  if (!confirm('Delete this log?')) return;
+  logs = logs.filter(l => l.id !== id);
+  try { localStorage.setItem('rk_logs', JSON.stringify(logs)); } catch(e) {}
+  renderHistory();
 }
 
 function getTempRange(f) {
@@ -299,7 +368,13 @@ function renderHistory() {
           <div class="log-temp">${l.tempF ? displayTemp(l.tempF) : '--°'}</div>
           <div class="log-act-name">${l.activityName}${l.activityMeta ? ' · ' + l.activityMeta : ''}</div>
         </div>
-        <div class="log-date">${l.date}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+          <div class="log-date">${l.date}</div>
+          <div style="display:flex;gap:8px;">
+            <button class="log-action-btn" onclick="editLog(${l.id})">Edit</button>
+            <button class="log-action-btn danger" onclick="deleteLog(${l.id})">Delete</button>
+          </div>
+        </div>
       </div>
       ${l.worn?.length ? `<div class="log-clothes">${l.worn.map(w => `<span class="clothes-tag">${w}</span>`).join('')}</div>` : ''}
       ${(l.workedWell || l.wouldChange) ? `<div class="log-feedback">
