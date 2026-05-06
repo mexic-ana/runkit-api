@@ -134,7 +134,7 @@ async function renderActivities() {
 
     filtered.forEach(act => {
       const logged = loggedIds.has(act.id);
-      html += `<div class="activity-row" onclick="selectActivity(${act.id})">
+      html += `<div class="activity-row" onclick="selectActivity('${act.id}')">
         <div class="activity-icon">${getActivityEmoji(act.type)}</div>
         <div class="activity-info">
           <div class="activity-name">${act.name}</div>
@@ -170,7 +170,7 @@ async function selectActivity(id) {
   editingLogId = null;
   document.getElementById('delete-btn').style.display = 'none';
 
-  selectedActivity = allActivities.find(a => a.id === id);
+  selectedActivity = allActivities.find(a => String(a.id) === String(id));
   if (!selectedActivity) return;
 
   checked.tops.clear(); checked.bottoms.clear(); checked.accessories.clear();
