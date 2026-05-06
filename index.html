@@ -69,7 +69,7 @@
 
     <!-- LOG -->
     <div id="screen-log" class="content" style="display:none;">
-      <button class="back-btn" onclick="showScreen('activities');renderActivities();">← Activities</button>
+      <button class="back-btn" id="log-back-btn" onclick="logGoBack()">← Back</button>
       <div class="sel-activity-card" id="sel-card"></div>
       <div class="card">
         <div class="card-label">Weather at activity time</div>
@@ -121,7 +121,7 @@
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="save-btn" id="save-btn" onclick="saveLog()" style="flex:1;">Save log</button>
-        <button class="delete-btn" id="delete-btn" onclick="confirmDelete()" style="display:none;">Delete</button>
+        <button class="delete-btn" id="delete-btn" onclick="confirmDelete()" style="display:none;flex-shrink:0;">Delete</button>
       </div>
     </div>
 
