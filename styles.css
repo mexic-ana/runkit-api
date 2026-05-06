@@ -221,3 +221,16 @@ body { font-family: var(--font); background: var(--color-background-tertiary); }
 }
 
 .log-action-btn.danger:hover { background: rgba(163, 45, 45, 0.08); }
+
+.delete-btn {
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  border: none;
+  background: #A32D2D;
+  color: white;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0;
+}

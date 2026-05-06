@@ -97,6 +97,16 @@ function finishOnboard() {
   navTo('activities');
 }
 
+function logGoBack() {
+  if (editingLogId) {
+    editingLogId = null;
+    navTo('history');
+  } else {
+    showScreen('activities');
+    renderActivities();
+  }
+}
+
 async function renderActivities() {
   const inner = document.getElementById('activities-inner');
 
