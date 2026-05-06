@@ -62,10 +62,18 @@
       </div>
     </div>
 
-    <!-- ACTIVITIES -->
-    <div id="screen-activities" class="content" style="display:none;">
-      <div id="activities-inner"></div>
-    </div>
+<!-- ACTIVITIES -->
+<div id="screen-activities" class="content" style="display:none;">
+  <select class="range-select" id="type-filter" onchange="renderActivities()" style="margin-bottom:12px;">
+    <option value="all">All activities</option>
+    <option value="Run">Runs</option>
+    <option value="Walk">Walks</option>
+    <option value="Ride">Rides</option>
+    <option value="Swim">Swims</option>
+    <option value="Hike">Hikes</option>
+  </select>
+  <div id="activities-inner"></div>
+</div>
 
     <!-- LOG -->
     <div id="screen-log" class="content" style="display:none;">
@@ -80,7 +88,6 @@
             <div class="weather-sub" id="log-cond">--</div>
           </div>
         </div>
-        <div class="weather-ts" id="log-ts"></div>
       </div>
       <div class="card">
         <div class="card-label">What I wore</div>

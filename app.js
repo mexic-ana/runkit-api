@@ -127,12 +127,12 @@ async function renderActivities() {
     }
 
     const loggedIds = new Set(logs.map(l => l.activityId));
-    let html = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-      <div class="strava-badge"><span>STRAVA</span></div>
-      <span style="font-size:12px;color:var(--color-text-tertiary);font-family:var(--mono);">${allActivities.length} activities</span>
-    </div>`;
+    let html = '';
 
-    allActivities.forEach(act => {
+    const typeFilter = document.getElementById('type-filter')?.value || 'all';
+    const filtered = typeFilter === 'all' ? allActivities : allActivities.filter(a => a.type === typeFilter);
+
+    filtered.forEach(act => {
       const logged = loggedIds.has(act.id);
       html += `<div class="activity-row" onclick="selectActivity(${act.id})">
         <div class="activity-icon">${getActivityEmoji(act.type)}</div>
@@ -202,7 +202,6 @@ async function selectActivity(id) {
       selectedActivity.weather = weather;
       updateWeatherDisplay(selectedActivity);
     } catch (err) {
-      document.getElementById('log-feels').textContent = 'Weather unavailable';
       console.error(err);
     }
   }
@@ -313,7 +312,6 @@ function editLog(id) {
   document.getElementById('log-temp').textContent = log.tempF ? displayTemp(log.tempF) : '--°';
   document.getElementById('log-feels').textContent = log.feelsF ? 'Feels like ' + displayTemp(log.feelsF) : '--';
   document.getElementById('log-cond').textContent = log.condition || '--';
-  document.getElementById('log-ts').textContent = log.date;
 
   // Update save button
   document.getElementById('save-btn').textContent = 'Update log';
