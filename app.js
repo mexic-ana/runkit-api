@@ -211,7 +211,6 @@ function updateWeatherDisplay(act) {
   document.getElementById('log-temp').textContent = displayTemp(act.weather.temp_f);
   document.getElementById('log-feels').textContent = 'Feels like ' + displayTemp(act.weather.feels_like_f);
   document.getElementById('log-cond').textContent = act.weather.condition;
-  document.getElementById('log-ts').textContent = act.date;
 }
 
 function renderClothing() {
