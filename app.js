@@ -204,8 +204,8 @@ async function renderActivities() {
 }
 
 function getActivityEmoji(type) {
-  const map = { Run: '🏃🏻‍♀️', Walk: '🚶🏻‍♀️', Ride: '🚴🏻‍♀️', Swim: '🏊🏻‍♀️', Hike: '🥾' };
-  return map[type] || '🏃🏻‍♀️';
+  const map = { Run: "🏃🏻‍♀️", Walk: "🚶🏻‍♀️", Ride: "🚴🏻‍♀️", Swim: "🏊🏻‍♀️", Hike: "🥾" };
+  return map[type] || "🏃🏻‍♀️";
 }
 
 function loadMore() {
@@ -215,13 +215,13 @@ function loadMore() {
 
 async function selectActivity(id) {
   // If already logged, open in edit mode instead
-  const existingLog = logs.find(l => String(l.activityId) === String(id));
+  const existingLog = logs.find((l) => String(l.activityId) === String(id));
   if (existingLog) {
     editLog(existingLog.id);
     return;
   }
-  
-  document.getElementById('save-btn').textContent = 'Save log';
+
+  document.getElementById("save-btn").textContent = "Save log";
   editingLogId = null;
   document.getElementById("delete-btn").style.display = "none";
 
@@ -275,7 +275,13 @@ function updateWeatherDisplay(act) {
   );
   document.getElementById("log-feels").textContent =
     "Feels like " + displayTemp(act.weather.feels_like_f);
-  document.getElementById("log-cond").textContent = act.weather.condition;
+  document.getElementById("log-cond").textContent = [
+    act.weather.condition,
+    act.weather.humidity ? act.weather.humidity + "% humidity" : null,
+    act.weather.city || null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 function renderClothing() {
