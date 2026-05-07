@@ -234,3 +234,18 @@ body { font-family: var(--font); background: var(--color-background-tertiary); }
   cursor: pointer;
   flex-shrink: 0;
 }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 8px;
+  user-select: none;
+}
+
+.section-chevron {
+  font-size: 16px;
+  color: var(--color-text-tertiary);
+}

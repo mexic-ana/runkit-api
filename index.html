@@ -90,25 +90,25 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-label">What I wore</div>
-        <div class="section-title">Tops</div>
-        <div class="clothing-grid" id="tops-grid"></div>
-        <div class="divider"></div>
-        <div class="section-title">Bottoms</div>
-        <div class="clothing-grid" id="bottoms-grid"></div>
-        <div class="divider"></div>
-        <div class="section-title">Accessories</div>
-        <div class="clothing-grid" id="accessories-grid"></div>
-        <div class="add-item-row">
-          <input class="add-input" id="new-item-input" placeholder="Add item..." onkeydown="if(event.key==='Enter')addItem()"/>
-          <select class="section-select" id="section-picker">
-            <option value="tops">Tops</option>
-            <option value="bottoms">Bottoms</option>
-            <option value="accessories" selected>Accessories</option>
-          </select>
-          <button class="add-btn" onclick="addItem()">Add</button>
-        </div>
+  <div class="card-label">What I wore</div>
+  <div id="tops-header"></div>
+  <div class="clothing-grid" id="tops-grid"></div>
+      <div class="divider"></div>
+      <div id="bottoms-header"></div>
+      <div class="clothing-grid" id="bottoms-grid"></div>
+      <div class="divider"></div>
+      <div id="accessories-header"></div>
+      <div class="clothing-grid" id="accessories-grid"></div>
+      <div class="add-item-row">
+        <input class="add-input" id="new-item-input" placeholder="Add item..." onkeydown="if(event.key==='Enter')addItem()"/>
+        <select class="section-select" id="section-picker">
+          <option value="tops">Tops</option>
+          <option value="bottoms">Bottoms</option>
+          <option value="accessories" selected>Accessories</option>
+        </select>
+        <button class="add-btn" onclick="addItem()">Add</button>
       </div>
+    </div>
       <div class="card">
         <div class="card-label">How did it go?</div>
         <div class="feedback-grid">

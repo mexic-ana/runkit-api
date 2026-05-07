@@ -10,6 +10,7 @@ let allActivities = [];
 let currentSubCat = null;
 let authToken = null;
 let editingLogId = null;
+let collapsedSections = { tops: false, bottoms: false, accessories: false };
 
 const checked = { tops: new Set(), bottoms: new Set(), accessories: new Set() };
 const hiddenItems = { tops: new Set(), bottoms: new Set(), accessories: new Set() };
@@ -216,13 +217,30 @@ function updateWeatherDisplay(act) {
 function renderClothing() {
   ['tops', 'bottoms', 'accessories'].forEach(cat => {
     const grid = document.getElementById(cat + '-grid');
+    const header = document.getElementById(cat + '-header');
+    const collapsed = collapsedSections[cat];
     const vis = clothing[cat].filter(i => !hiddenItems[cat].has(i));
+    
+    if (header) {
+      header.innerHTML = `
+        <div class="section-header" onclick="toggleSection('${cat}')">
+          <span class="section-title">${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+          <span class="section-chevron">${collapsed ? '›' : '⌄'}</span>
+        </div>`;
+    }
+
+    grid.style.display = collapsed ? 'none' : 'grid';
     grid.innerHTML = vis.map(item => `
       <div class="clothing-item ${checked[cat].has(item) ? 'checked' : ''}" onclick="toggleItem('${cat}','${encodeURIComponent(item)}')">
         <div class="c-check"><div class="c-dot"></div></div>
         <span class="clothing-label">${item}</span>
       </div>`).join('');
   });
+}
+
+function toggleSection(cat) {
+  collapsedSections[cat] = !collapsedSections[cat];
+  renderClothing();
 }
 
 function toggleItem(cat, enc) {
