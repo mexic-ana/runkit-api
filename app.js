@@ -10,7 +10,7 @@ let allActivities = [];
 let currentSubCat = null;
 let authToken = null;
 let editingLogId = null;
-let collapsedSections = { tops: false, bottoms: false, accessories: false };
+let collapsedSections = { tops: false, bottoms: false, accessories: false, feedback: false, notes: false };
 
 const checked = { tops: new Set(), bottoms: new Set(), accessories: new Set() };
 const hiddenItems = { tops: new Set(), bottoms: new Set(), accessories: new Set() };
@@ -247,6 +247,14 @@ function toggleItem(cat, enc) {
   const item = decodeURIComponent(enc);
   checked[cat].has(item) ? checked[cat].delete(item) : checked[cat].add(item);
   renderClothing();
+}
+
+function toggleCardSection(section) {
+  collapsedSections[section] = !collapsedSections[section];
+  const content = document.getElementById(section + '-content');
+  const chevron = document.getElementById(section + '-chevron');
+  if (content) content.style.display = collapsedSections[section] ? 'none' : 'block';
+  if (chevron) chevron.textContent = collapsedSections[section] ? '›' : '⌄';
 }
 
 function addItem() {
