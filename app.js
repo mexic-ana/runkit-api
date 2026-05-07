@@ -188,7 +188,6 @@ async function selectActivity(id) {
   document.getElementById('log-temp').textContent = '--°';
   document.getElementById('log-feels').textContent = 'Fetching weather...';
   document.getElementById('log-cond').textContent = '';
-  document.getElementById('log-ts').textContent = selectedActivity.date;
 
   renderClothing();
   showScreen('log');
