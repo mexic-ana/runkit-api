@@ -209,8 +209,11 @@ function getActivityEmoji(type) {
 }
 
 function loadMore() {
+  const scrollY = window.scrollY;
   activitiesPage++;
-  renderActivities();
+  renderActivities().then(() => {
+    window.scrollTo(0, scrollY);
+  });
 }
 
 async function selectActivity(id) {
