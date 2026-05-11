@@ -2,7 +2,7 @@
   "name": "Run Kit",
   "short_name": "Run Kit",
   "description": "Log what you wear for every run",
-  "start_url": "/runkit-api/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0F1F3D",
   "theme_color": "#0F1F3D",
