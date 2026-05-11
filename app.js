@@ -265,6 +265,7 @@ async function selectActivity(id) {
       const weather = await res.json();
       selectedActivity.weather = weather;
       updateWeatherDisplay(selectedActivity);
+      showSuggestion(weather.temp_f);
     } catch (err) {
       console.error(err);
     }
@@ -592,6 +593,54 @@ function addFromSub() {
   if (!clothing[currentSubCat].includes(val)) clothing[currentSubCat].push(val);
   input.value = "";
   renderSubItems();
+}
+
+function getSuggestion(tempF) {
+  if (!tempF || logs.length === 0) return null;
+  
+  const similar = logs.filter(l => l.tempF && Math.abs(l.tempF - tempF) <= 5);
+  if (similar.length === 0) return null;
+
+  // Count item frequency across similar logs
+  const counts = {};
+  similar.forEach(l => {
+    l.worn?.forEach(item => {
+      counts[item] = (counts[item] || 0) + 1;
+    });
+  });
+
+  // Get items worn in majority of similar logs
+  const threshold = Math.ceil(similar.length / 2);
+  const suggested = Object.entries(counts)
+    .filter(([_, count]) => count >= threshold)
+    .sort((a, b) => b[1] - a[1])
+    .map(([item]) => item);
+
+  if (suggested.length === 0) return null;
+  return { items: suggested, count: similar.length, temp: tempF };
+}
+
+function showSuggestion(tempF) {
+  const suggestion = getSuggestion(tempF);
+  const existing = document.getElementById('suggestion-card');
+  if (existing) existing.remove();
+  if (!suggestion) return;
+
+  const card = document.createElement('div');
+  card.id = 'suggestion-card';
+  card.className = 'card';
+  card.style.borderColor = '#0F1F3D';
+  card.innerHTML = `
+    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.6px;color:var(--color-text-tertiary);margin-bottom:8px;">Based on ${suggestion.count} similar run${suggestion.count > 1 ? 's' : ''}</div>
+    <div style="font-size:14px;color:var(--color-text-primary);margin-bottom:8px;">At similar temps you usually wore:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      ${suggestion.items.map(item => `<span class="clothes-tag" style="border-color:#0F1F3D;">${item}</span>`).join('')}
+    </div>
+  `;
+
+  // Insert before the What I wore card
+  const woreCard = document.getElementById('tops-header').closest('.card');
+  woreCard.parentNode.insertBefore(card, woreCard);
 }
 
 // Init
