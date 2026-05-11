@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
           start_date: dateStr,
           end_date: dateStr,
           hourly:
-            "temperature_2m,apparent_temperature,weathercode,windspeed_10m,relativehumidity_2m",
+            "temperature_2m,apparent_temperature,weathercode,windspeed_10m,relativehumidity_2m,dewpoint_2m",
           temperature_unit: "fahrenheit",
           windspeed_unit: "mph",
           timezone: "auto",
@@ -41,6 +41,7 @@ router.get("/", async (req, res) => {
     const hourlyWind = data.hourly.windspeed_10m[hour];
     const hourlyCode = data.hourly.weathercode[hour];
     const hourlyHumidity = data.hourly.relativehumidity_2m[hour];
+    const hourlyDewpoint = data.hourly.dewpoint_2m[hour];
 
     const geo = geoResponse.data;
     const city =
@@ -51,6 +52,7 @@ router.get("/", async (req, res) => {
       feels_like_f: Math.round(hourlyFeels),
       wind_mph: Math.round(hourlyWind),
       humidity: Math.round(hourlyHumidity),
+      dew_point_f: Math.round(hourlyDewpoint),
       condition: getCondition(hourlyCode),
       city,
     });

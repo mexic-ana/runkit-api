@@ -278,6 +278,7 @@ function updateWeatherDisplay(act) {
   document.getElementById("log-cond").textContent = [
     act.weather.condition,
     act.weather.humidity ? act.weather.humidity + "% humidity" : null,
+    act.weather.dew_point_f ? 'Dew point ' + displayTemp(act.weather.dew_point_f) : null,
     act.weather.city || null,
   ]
     .filter(Boolean)
