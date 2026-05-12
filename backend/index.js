@@ -5,9 +5,11 @@ const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
 
+const { initDB } = require('./lib/db');
 const authRoutes = require('./routes/auth');
 const activityRoutes = require('./routes/activities');
 const weatherRoutes = require('./routes/weather');
+const logsRoutes = require('./routes/logs');
 
 const app = express();
 
@@ -36,12 +38,15 @@ app.use(session({
 app.use('/auth', authRoutes);
 app.use('/activities', activityRoutes);
 app.use('/weather', weatherRoutes);
+app.use('/logs', logsRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'runkit-api' });
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`runkit-api running on port ${PORT}`);
+initDB().then(() => {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`runkit-api running on port ${PORT}`);
+  });
 });
