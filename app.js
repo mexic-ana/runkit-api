@@ -46,9 +46,19 @@ const clothing = {
 };
 
 let logs = [];
-try {
-  logs = JSON.parse(localStorage.getItem("rk_logs") || "[]");
-} catch (e) {}
+
+async function loadLogs() {
+  try {
+    const response = await fetch(`${API_URL}/logs`);
+    logs = await response.json();
+    // Also keep localStorage in sync as backup
+    try { localStorage.setItem('rk_logs', JSON.stringify(logs)); } catch(e) {}
+  } catch (err) {
+    console.error('Load logs error:', err);
+    // Fall back to localStorage if API fails
+    try { logs = JSON.parse(localStorage.getItem('rk_logs') || '[]'); } catch(e) {}
+  }
+}
 
 // Check if returning from Strava OAuth
 function checkAuthCallback() {
@@ -347,45 +357,57 @@ function addItem() {
   renderClothing();
 }
 
-function saveLog() {
+async function saveLog() {
   const worn = [...checked.tops, ...checked.bottoms, ...checked.accessories];
 
-  if (editingLogId) {
-    // Edit existing log
-    const index = logs.findIndex((l) => l.id === editingLogId);
-    if (index !== -1) {
-      logs[index] = {
-        ...logs[index],
-        worn,
-        workedWell: document.getElementById("worked-well").value.trim(),
-        wouldChange: document.getElementById("would-change").value.trim(),
-        notes: document.getElementById("notes-input").value.trim(),
-      };
-    }
-    editingLogId = null;
-  } else {
-    // New log
-    logs.unshift({
-      id: Date.now(),
-      activityId: selectedActivity.id,
-      activityName: selectedActivity.name,
-      activityMeta:
-        selectedActivity.distance + " · " + selectedActivity.duration,
-      tempF: selectedActivity.weather?.temp_f || null,
-      feelsF: selectedActivity.weather?.feels_like_f || null,
-      condition: selectedActivity.weather?.condition || null,
-      worn,
-      workedWell: document.getElementById("worked-well").value.trim(),
-      wouldChange: document.getElementById("would-change").value.trim(),
-      notes: document.getElementById("notes-input").value.trim(),
-      date: selectedActivity.date,
-    });
-  }
+  const logData = editingLogId ? {
+    id: editingLogId,
+    activityId: logs.find(l => l.id === editingLogId)?.activityId,
+    activityName: logs.find(l => l.id === editingLogId)?.activityName,
+    activityMeta: logs.find(l => l.id === editingLogId)?.activityMeta,
+    tempF: logs.find(l => l.id === editingLogId)?.tempF,
+    feelsF: logs.find(l => l.id === editingLogId)?.feelsF,
+    condition: logs.find(l => l.id === editingLogId)?.condition,
+    humidity: logs.find(l => l.id === editingLogId)?.humidity,
+    dewPointF: logs.find(l => l.id === editingLogId)?.dew_point_f,
+    city: logs.find(l => l.id === editingLogId)?.city,
+    date: logs.find(l => l.id === editingLogId)?.date,
+    worn,
+    workedWell: document.getElementById('worked-well').value.trim(),
+    wouldChange: document.getElementById('would-change').value.trim(),
+    notes: document.getElementById('notes-input').value.trim(),
+  } : {
+    id: Date.now(),
+    activityId: selectedActivity.id,
+    activityName: selectedActivity.name,
+    activityMeta: selectedActivity.distance + ' · ' + selectedActivity.duration,
+    tempF: selectedActivity.weather?.temp_f || null,
+    feelsF: selectedActivity.weather?.feels_like_f || null,
+    condition: selectedActivity.weather?.condition || null,
+    humidity: selectedActivity.weather?.humidity || null,
+    dewPointF: selectedActivity.weather?.dew_point_f || null,
+    city: selectedActivity.weather?.city || null,
+    worn,
+    workedWell: document.getElementById('worked-well').value.trim(),
+    wouldChange: document.getElementById('would-change').value.trim(),
+    notes: document.getElementById('notes-input').value.trim(),
+    date: selectedActivity.date
+  };
 
   try {
-    localStorage.setItem("rk_logs", JSON.stringify(logs));
-  } catch (e) {}
-  navTo("history");
+    await fetch(`${API_URL}/logs`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(logData)
+    });
+
+    await loadLogs();
+  } catch (err) {
+    console.error('Save log error:', err);
+  }
+
+  editingLogId = null;
+  navTo('history');
 }
 
 function editLog(id) {
@@ -434,11 +456,13 @@ function editLog(id) {
   showScreen("log");
 }
 
-function deleteLog(id) {
-  logs = logs.filter((l) => l.id !== id);
+async function deleteLog(id) {
   try {
-    localStorage.setItem("rk_logs", JSON.stringify(logs));
-  } catch (e) {}
+    await fetch(`${API_URL}/logs/${id}`, { method: 'DELETE' });
+    await loadLogs();
+  } catch (err) {
+    console.error('Delete log error:', err);
+  }
   renderHistory();
 }
 
@@ -648,7 +672,7 @@ loadSavedState();
 checkAuthCallback();
 
 if (stravaConnected) {
-  finishOnboard();
+  loadLogs().then(() => finishOnboard());
 } else {
-  showScreen("onboard1");
+  showScreen('onboard1');
 }
