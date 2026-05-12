@@ -9,7 +9,25 @@ router.get('/', async (req, res) => {
     const result = await query(
       'SELECT * FROM logs ORDER BY created_at DESC'
     );
-    res.json(result.rows);
+    const logs = result.rows.map(row => ({
+      id: row.id,
+      activityId: row.activity_id,
+      activityName: row.activity_name,
+      activityMeta: row.activity_meta,
+      tempF: row.temp_f,
+      feelsF: row.feels_f,
+      condition: row.condition,
+      humidity: row.humidity,
+      dew_point_f: row.dew_point_f,
+      city: row.city,
+      worn: row.worn,
+      workedWell: row.worked_well,
+      wouldChange: row.would_change,
+      notes: row.notes,
+      date: row.date,
+      created_at: row.created_at
+    }));
+    res.json(logs);
   } catch (err) {
     console.error('Get logs error:', err.message);
     res.status(500).json({ error: err.message });
