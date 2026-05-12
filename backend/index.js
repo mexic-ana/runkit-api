@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const activityRoutes = require('./routes/activities');
 const weatherRoutes = require('./routes/weather');
 const logsRoutes = require('./routes/logs');
+const pushRoutes = require('./routes/push');
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use('/auth', authRoutes);
 app.use('/activities', activityRoutes);
 app.use('/weather', weatherRoutes);
 app.use('/logs', logsRoutes);
+app.use('/push', pushRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'runkit-api' });

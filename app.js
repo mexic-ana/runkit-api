@@ -146,8 +146,34 @@ function closeModal() {
 
 function finishOnboard() {
   closeModal();
-  document.getElementById("bottom-nav").style.display = "flex";
-  navTo("activities");
+  document.getElementById('bottom-nav').style.display = 'flex';
+  navTo('activities');
+  setupPushNotifications();
+}
+
+async function setupPushNotifications() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+
+    const subscription = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: 'BI0gLlY_ZUA9QO6jf-WpZbkeRxlimQ0Y0CbUxi_vbXwygTBcRhFhzdvgFoBy-VDxg-PHzLUqukaGagBk6Qxa6Ko'
+    });
+
+    await fetch(`${API_URL}/push/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscription })
+    });
+
+    console.log('Push notifications enabled!');
+  } catch (err) {
+    console.error('Push setup error:', err);
+  }
 }
 
 function logGoBack() {
