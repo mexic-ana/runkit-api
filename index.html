@@ -141,7 +141,11 @@
         <select
           class="range-select"
           id="type-filter"
-          onchange="renderActivities()"
+          onchange="
+            activitiesPage = 1;
+            allActivities = [];
+            renderActivities();
+          "
           style="margin-bottom: 12px"
         >
           <option value="all">All activities</option>

@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
 
     const activityDate = new Date(date);
     const dateStr = activityDate.toISOString().split("T")[0];
-    const hour = activityDate.getHours();
 
     // Run weather and reverse geocode in parallel
     const [weatherResponse, geoResponse] = await Promise.all([
@@ -36,12 +35,17 @@ router.get("/", async (req, res) => {
     ]);
 
     const data = weatherResponse.data;
-    const hourlyTemp = data.hourly.temperature_2m[hour];
-    const hourlyFeels = data.hourly.apparent_temperature[hour];
-    const hourlyWind = data.hourly.windspeed_10m[hour];
-    const hourlyCode = data.hourly.weathercode[hour];
-    const hourlyHumidity = data.hourly.relativehumidity_2m[hour];
-    const hourlyDewpoint = data.hourly.dewpoint_2m[hour];
+
+    // Use UTC offset from Open-Meteo to calculate correct local hour
+    const utcOffsetHours = data.utc_offset_seconds / 3600;
+    const localHour = ((activityDate.getUTCHours() + utcOffsetHours) + 24) % 24;
+
+    const hourlyTemp = data.hourly.temperature_2m[localHour];
+    const hourlyFeels = data.hourly.apparent_temperature[localHour];
+    const hourlyWind = data.hourly.windspeed_10m[localHour];
+    const hourlyCode = data.hourly.weathercode[localHour];
+    const hourlyHumidity = data.hourly.relativehumidity_2m[localHour];
+    const hourlyDewpoint = data.hourly.dewpoint_2m[localHour];
 
     const geo = geoResponse.data;
     const city =
