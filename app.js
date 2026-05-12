@@ -52,11 +52,15 @@ async function loadLogs() {
     const response = await fetch(`${API_URL}/logs`);
     logs = await response.json();
     // Also keep localStorage in sync as backup
-    try { localStorage.setItem('rk_logs', JSON.stringify(logs)); } catch(e) {}
+    try {
+      localStorage.setItem("rk_logs", JSON.stringify(logs));
+    } catch (e) {}
   } catch (err) {
-    console.error('Load logs error:', err);
+    console.error("Load logs error:", err);
     // Fall back to localStorage if API fails
-    try { logs = JSON.parse(localStorage.getItem('rk_logs') || '[]'); } catch(e) {}
+    try {
+      logs = JSON.parse(localStorage.getItem("rk_logs") || "[]");
+    } catch (e) {}
   }
 }
 
@@ -146,33 +150,34 @@ function closeModal() {
 
 function finishOnboard() {
   closeModal();
-  document.getElementById('bottom-nav').style.display = 'flex';
-  navTo('activities');
+  document.getElementById("bottom-nav").style.display = "flex";
+  navTo("activities");
   setupPushNotifications();
 }
 
 async function setupPushNotifications() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
 
   try {
     const reg = await navigator.serviceWorker.ready;
     const permission = await Notification.requestPermission();
-    if (permission !== 'granted') return;
+    if (permission !== "granted") return;
 
     const subscription = await reg.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: 'BI0gLlY_ZUA9QO6jf-WpZbkeRxlimQ0Y0CbUxi_vbXwygTBcRhFhzdvgFoBy-VDxg-PHzLUqukaGagBk6Qxa6Ko'
+      applicationServerKey:
+        "BI0gLlY_ZUA9QO6jf-WpZbkeRxlimQ0Y0CbUxi_vbXwygTBcRhFhzdvgFoBy-VDxg-PHzLUqukaGagBk6Qxa6Ko",
     });
 
     await fetch(`${API_URL}/push/subscribe`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subscription })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ subscription }),
     });
 
-    console.log('Push notifications enabled!');
+    console.log("Push notifications enabled!");
   } catch (err) {
-    console.error('Push setup error:', err);
+    console.error("Push setup error:", err);
   }
 }
 
@@ -318,7 +323,9 @@ function updateWeatherDisplay(act) {
   document.getElementById("log-cond").textContent = [
     act.weather.condition,
     act.weather.humidity ? act.weather.humidity + "% humidity" : null,
-    act.weather.dew_point_f ? 'Dew point ' + displayTemp(act.weather.dew_point_f) : null,
+    act.weather.dew_point_f
+      ? "Dew point " + displayTemp(act.weather.dew_point_f)
+      : null,
     act.weather.city || null,
   ]
     .filter(Boolean)
@@ -386,58 +393,61 @@ function addItem() {
 async function saveLog() {
   const worn = [...checked.tops, ...checked.bottoms, ...checked.accessories];
 
-  const logData = editingLogId ? {
-    id: editingLogId,
-    activityId: logs.find(l => l.id === editingLogId)?.activityId,
-    activityName: logs.find(l => l.id === editingLogId)?.activityName,
-    activityMeta: logs.find(l => l.id === editingLogId)?.activityMeta,
-    tempF: logs.find(l => l.id === editingLogId)?.tempF,
-    feelsF: logs.find(l => l.id === editingLogId)?.feelsF,
-    condition: logs.find(l => l.id === editingLogId)?.condition,
-    humidity: logs.find(l => l.id === editingLogId)?.humidity,
-    dewPointF: logs.find(l => l.id === editingLogId)?.dew_point_f,
-    city: logs.find(l => l.id === editingLogId)?.city,
-    date: logs.find(l => l.id === editingLogId)?.date,
-    worn,
-    workedWell: document.getElementById('worked-well').value.trim(),
-    wouldChange: document.getElementById('would-change').value.trim(),
-    notes: document.getElementById('notes-input').value.trim(),
-  } : {
-    id: Date.now(),
-    activityId: selectedActivity.id,
-    activityName: selectedActivity.name,
-    activityMeta: selectedActivity.distance + ' · ' + selectedActivity.duration,
-    tempF: selectedActivity.weather?.temp_f || null,
-    feelsF: selectedActivity.weather?.feels_like_f || null,
-    condition: selectedActivity.weather?.condition || null,
-    humidity: selectedActivity.weather?.humidity || null,
-    dewPointF: selectedActivity.weather?.dew_point_f || null,
-    city: selectedActivity.weather?.city || null,
-    worn,
-    workedWell: document.getElementById('worked-well').value.trim(),
-    wouldChange: document.getElementById('would-change').value.trim(),
-    notes: document.getElementById('notes-input').value.trim(),
-    date: selectedActivity.date
-  };
+  const logData = editingLogId
+    ? {
+        id: editingLogId,
+        activityId: logs.find((l) => l.id === editingLogId)?.activityId,
+        activityName: logs.find((l) => l.id === editingLogId)?.activityName,
+        activityMeta: logs.find((l) => l.id === editingLogId)?.activityMeta,
+        tempF: logs.find((l) => l.id === editingLogId)?.tempF,
+        feelsF: logs.find((l) => l.id === editingLogId)?.feelsF,
+        condition: logs.find((l) => l.id === editingLogId)?.condition,
+        humidity: logs.find((l) => l.id === editingLogId)?.humidity,
+        dewPointF: logs.find((l) => l.id === editingLogId)?.dew_point_f,
+        city: logs.find((l) => l.id === editingLogId)?.city,
+        date: logs.find((l) => l.id === editingLogId)?.date,
+        worn,
+        workedWell: document.getElementById("worked-well").value.trim(),
+        wouldChange: document.getElementById("would-change").value.trim(),
+        notes: document.getElementById("notes-input").value.trim(),
+      }
+    : {
+        id: Date.now(),
+        activityId: selectedActivity.id,
+        activityName: selectedActivity.name,
+        activityMeta:
+          selectedActivity.distance + " · " + selectedActivity.duration,
+        tempF: selectedActivity.weather?.temp_f || null,
+        feelsF: selectedActivity.weather?.feels_like_f || null,
+        condition: selectedActivity.weather?.condition || null,
+        humidity: selectedActivity.weather?.humidity || null,
+        dewPointF: selectedActivity.weather?.dew_point_f || null,
+        city: selectedActivity.weather?.city || null,
+        worn,
+        workedWell: document.getElementById("worked-well").value.trim(),
+        wouldChange: document.getElementById("would-change").value.trim(),
+        notes: document.getElementById("notes-input").value.trim(),
+        date: selectedActivity.date,
+      };
 
   try {
     await fetch(`${API_URL}/logs`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(logData)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(logData),
     });
 
     await loadLogs();
   } catch (err) {
-    console.error('Save log error:', err);
+    console.error("Save log error:", err);
   }
 
   editingLogId = null;
-  navTo('history');
+  navTo("history");
 }
 
 function editLog(id) {
-  const log = logs.find(l => String(l.id) === String(id));
+  const log = logs.find((l) => String(l.id) === String(id));
   if (!log) return;
 
   editingLogId = id;
@@ -484,10 +494,10 @@ function editLog(id) {
 
 async function deleteLog(id) {
   try {
-    await fetch(`${API_URL}/logs/${id}`, { method: 'DELETE' });
+    await fetch(`${API_URL}/logs/${id}`, { method: "DELETE" });
     await loadLogs();
   } catch (err) {
-    console.error('Delete log error:', err);
+    console.error("Delete log error:", err);
   }
   renderHistory();
 }
@@ -647,14 +657,14 @@ function addFromSub() {
 
 function getSuggestion(tempF) {
   if (!tempF || logs.length === 0) return null;
-  
-  const similar = logs.filter(l => l.tempF && Math.abs(l.tempF - tempF) <= 5);
+
+  const similar = logs.filter((l) => l.tempF && Math.abs(l.tempF - tempF) <= 5);
   if (similar.length === 0) return null;
 
   // Count item frequency across similar logs
   const counts = {};
-  similar.forEach(l => {
-    l.worn?.forEach(item => {
+  similar.forEach((l) => {
+    l.worn?.forEach((item) => {
       counts[item] = (counts[item] || 0) + 1;
     });
   });
@@ -672,24 +682,24 @@ function getSuggestion(tempF) {
 
 function showSuggestion(tempF) {
   const suggestion = getSuggestion(tempF);
-  const existing = document.getElementById('suggestion-card');
+  const existing = document.getElementById("suggestion-card");
   if (existing) existing.remove();
   if (!suggestion) return;
 
-  const card = document.createElement('div');
-  card.id = 'suggestion-card';
-  card.className = 'card';
-  card.style.borderColor = '#0F1F3D';
+  const card = document.createElement("div");
+  card.id = "suggestion-card";
+  card.className = "card";
+  card.style.borderColor = "#0F1F3D";
   card.innerHTML = `
-    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.6px;color:var(--color-text-tertiary);margin-bottom:8px;">Based on ${suggestion.count} similar run${suggestion.count > 1 ? 's' : ''}</div>
+    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.6px;color:var(--color-text-tertiary);margin-bottom:8px;">Based on ${suggestion.count} similar run${suggestion.count > 1 ? "s" : ""}</div>
     <div style="font-size:14px;color:var(--color-text-primary);margin-bottom:8px;">At similar temps you usually wore:</div>
     <div style="display:flex;flex-wrap:wrap;gap:6px;">
-      ${suggestion.items.map(item => `<span class="clothes-tag" style="border-color:#0F1F3D;">${item}</span>`).join('')}
+      ${suggestion.items.map((item) => `<span class="clothes-tag" style="border-color:#0F1F3D;">${item}</span>`).join("")}
     </div>
   `;
 
   // Insert before the What I wore card
-  const woreCard = document.getElementById('tops-header').closest('.card');
+  const woreCard = document.getElementById("tops-header").closest(".card");
   woreCard.parentNode.insertBefore(card, woreCard);
 }
 
@@ -698,7 +708,10 @@ loadSavedState();
 checkAuthCallback();
 
 if (stravaConnected) {
-  loadLogs().then(() => finishOnboard());
+  loadLogs().then(() => {
+    finishOnboard();
+    setupPushNotifications();
+  });
 } else {
-  showScreen('onboard1');
+  showScreen("onboard1");
 }
