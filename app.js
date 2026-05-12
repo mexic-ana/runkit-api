@@ -411,7 +411,7 @@ async function saveLog() {
 }
 
 function editLog(id) {
-  const log = logs.find((l) => l.id === id);
+  const log = logs.find(l => String(l.id) === String(id));
   if (!log) return;
 
   editingLogId = id;
@@ -511,7 +511,7 @@ function renderHistory() {
   list.innerHTML = filtered
     .map(
       (l) => `
-    <div class="log-item" onclick="editLog(${l.id})">
+    <div class="log-item" onclick="editLog('${l.id}')">
       <div class="log-header">
         <div>
           <div class="log-temp">${l.tempF ? displayTemp(l.tempF) : "--°"}</div>
